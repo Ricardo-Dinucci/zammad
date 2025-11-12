@@ -25,6 +25,7 @@ import LoginThirdParty from '#desktop/pages/authentication/components/LoginThird
 
 import { ensureAfterAuth } from '../after-auth/composable/useAfterAuthPlugins.ts'
 import LoginRecoveryCode from '../components/LoginRecoveryCode.vue'
+import LoginTestUsers from '../components/LoginTestUsers.vue'
 import LoginTwoFactor from '../components/LoginTwoFactor.vue'
 import LoginTwoFactorMethods from '../components/LoginTwoFactorMethods.vue'
 import { useAdminPasswordAuthVerify } from '../composables/useAdminPasswordAuthVerify.ts'
@@ -157,6 +158,15 @@ const { verifyTokenResult, verifyTokenMessage, verifyTokenAlertVariant } =
     formInitialValues,
   })
 
+const fillCredentials = (credentials: { login: string; password: string }) => {
+  if (form.value?.formNode) {
+    form.value.formNode.input({
+      login: credentials.login,
+      password: credentials.password,
+    })
+  }
+}
+
 const showPasswordLogin = computed(
   () =>
     application.config.user_show_password_login ||
@@ -168,7 +178,7 @@ const { switchValue, toggleBetaUiSwitch } = useNewBetaUi()
 </script>
 
 <template>
-  <LayoutPublicPage box-size="small" :title="loginPageTitle" show-logo>
+  <LayoutPublicPage box-size="large" :title="loginPageTitle" show-logo>
     <div v-if="$c.maintenance_mode" class="mb-1 rounded-lg bg-red-500 px-4 py-2 text-sm text-white">
       {{
         $t(
@@ -192,31 +202,47 @@ const { switchValue, toggleBetaUiSwitch } = useNewBetaUi()
         $t(passwordLoginErrorMessage)
       }}</CommonAlert>
 
-      <Form
-        v-if="loginFlow.state === 'credentials' && showPasswordLogin"
-        id="login"
-        ref="form"
-        form-class="mb-2.5 space-y-2.5"
-        :schema="loginSchema"
-        :schema-data="schemaData"
-        :initial-values="formInitialValues"
-        :change-fields="formChangeFields"
-        @submit="login($event as FormSubmitData<LoginCredentials>)"
-      >
-        <template #after-fields>
-          <div v-if="$c.user_create_account" class="flex justify-center py-3">
-            <CommonLabel>
-              {{ $t('New user?') }}
-              <CommonLink link="/signup" class="select-none" size="medium">{{
-                $t('Register')
-              }}</CommonLink>
-            </CommonLabel>
-          </div>
-          <CommonButton type="submit" variant="submit" size="large" block :disabled="isDisabled">
-            {{ $t('Sign in') }}
-          </CommonButton>
-        </template>
-      </Form>
+      <!-- Two-column layout for desktop, stacked for mobile -->
+      <div v-if="loginFlow.state === 'credentials'" class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <!-- Login Form Column -->
+        <div class="flex flex-col">
+          <Form
+            id="login"
+            ref="form"
+            form-class="mb-2.5 space-y-2.5"
+            :schema="loginSchema"
+            :schema-data="schemaData"
+            :initial-values="formInitialValues"
+            :change-fields="formChangeFields"
+            @submit="login($event as FormSubmitData<LoginCredentials>)"
+          >
+            <template #after-fields>
+              <div v-if="$c.user_create_account" class="flex justify-center py-3">
+                <CommonLabel>
+                  {{ $t('New user?') }}
+                  <CommonLink link="/signup" class="select-none" size="medium">{{
+                    $t('Register')
+                  }}</CommonLink>
+                </CommonLabel>
+              </div>
+              <CommonButton
+                type="submit"
+                variant="submit"
+                size="large"
+                block
+                :disabled="isDisabled"
+              >
+                {{ $t('Sign in') }}
+              </CommonButton>
+            </template>
+          </Form>
+        </div>
+
+        <!-- Test Users Column -->
+        <div class="flex flex-col">
+          <LoginTestUsers @fill-credentials="fillCredentials" />
+        </div>
+      </div>
 
       <LoginTwoFactor
         v-else-if="loginFlow.state === '2fa' && twoFactorPlugin && loginFlow.credentials"
