@@ -1,0 +1,242 @@
+// Test Users Card Styles for Login Page
+
+.login-with-test-users {
+  max-width: 1400px !important;
+  margin: 0 auto;
+}
+
+.login-columns-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.login-form-column {
+  width: 100%;
+}
+
+// Test Users Card
+.test-users-card {
+  background: white;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.test-users-header {
+  background: linear-gradient(to right, #f97316, #eab308);
+  color: white;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s;
+
+  &:hover {
+    background: linear-gradient(to right, #ea580c, #ca8a04);
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .icon {
+      fill: white;
+    }
+  }
+
+  .header-title {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .chevron {
+    transition: transform 0.3s;
+    fill: white;
+  }
+}
+
+.test-users-card.collapsed {
+  .chevron {
+    transform: rotate(-90deg);
+  }
+
+  .test-users-body {
+    display: none;
+  }
+}
+
+.test-users-body {
+  padding: 1rem;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+// Test User Item
+.test-user-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+
+    .copy-btn,
+    .toggle-password-btn {
+      opacity: 1;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-weight: bold;
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.user-department {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.user-role-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+
+  &.role-admin {
+    background: #f3e8ff;
+    color: #7c3aed;
+  }
+
+  &.role-agent {
+    background: #dbeafe;
+    color: #2563eb;
+  }
+
+  &.role-customer {
+    background: #d1fae5;
+    color: #059669;
+  }
+}
+
+.user-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.credential-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.credential-value {
+  flex: 1;
+  font-size: 0.75rem;
+  font-family: 'Fira Code', 'Monaco', 'Consolas', 'Courier New', monospace;
+  background: #f9fafb;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  color: #374151;
+}
+
+.copy-btn,
+.toggle-password-btn {
+  padding: 0.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+
+  &:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+
+  .icon {
+    fill: #6b7280;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// Make buttons visible on mobile (no hover)
+@media (max-width: 768px) {
+  .copy-btn,
+  .toggle-password-btn {
+    opacity: 1;
+  }
+}
+
+// Mobile adjustments
+@media (max-width: 640px) {
+  .login-columns-wrapper {
+    gap: 1rem;
+  }
+
+  .test-users-card {
+    border-radius: 1rem;
+  }
+
+  .test-users-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .test-users-body {
+    padding: 0.75rem;
+  }
+
+  .test-user-item {
+    padding: 0.5rem;
+  }
+
+  .user-name {
+    font-size: 0.875rem;
+  }
+
+  .credential-value {
+    font-size: 0.7rem;
+  }
+}

@@ -4,6 +4,11 @@ class Login extends App.ControllerFullPage
     'click .js-go-to-mobile': 'goToMobile'
     'click .js-try-another':              'clickedTryAnotherTwoFactor'
     'click .js-select-two-factor-method': 'clickedAnotherTwoFactor'
+    'click .js-test-users-toggle':        'toggleTestUsersCard'
+    'click .js-test-user':                'fillTestUserCredentials'
+    'click .js-copy-email':               'copyEmail'
+    'click .js-copy-password':            'copyPassword'
+    'click .js-toggle-password':          'togglePassword'
   className: 'login'
 
   constructor: ->
@@ -230,6 +235,89 @@ class Login extends App.ControllerFullPage
     @preventDefaultAndStopPropagation(e)
 
     App.MobileDetection.redirectToMobile()
+
+  toggleTestUsersCard: (e) ->
+    @preventDefaultAndStopPropagation(e)
+    card = @$('.test-users-card')
+    card.toggleClass('collapsed')
+
+  fillTestUserCredentials: (e) ->
+    @preventDefaultAndStopPropagation(e)
+    target = $(e.currentTarget)
+    email = target.data('email')
+    password = target.data('password')
+    userName = target.find('.user-name').text()
+
+    # Fill the form fields
+    @$('#username').val(email)
+    @$('#password').val(password)
+
+    # Show success notification
+    @notify(
+      type: 'success'
+      msg: App.i18n.translateContent('Credentials for %s filled!', userName)
+      timeout: 2000
+    )
+
+  copyEmail: (e) ->
+    @preventDefaultAndStopPropagation(e)
+    userItem = $(e.currentTarget).closest('.js-test-user')
+    email = userItem.data('email')
+
+    @copyToClipboard(email)
+    @notify(
+      type: 'success'
+      msg: App.i18n.translateContent('Email copied!')
+      timeout: 2000
+    )
+
+  copyPassword: (e) ->
+    @preventDefaultAndStopPropagation(e)
+    userItem = $(e.currentTarget).closest('.js-test-user')
+    password = userItem.data('password')
+
+    @copyToClipboard(password)
+    @notify(
+      type: 'success'
+      msg: App.i18n.translateContent('Password copied!')
+      timeout: 2000
+    )
+
+  togglePassword: (e) ->
+    @preventDefaultAndStopPropagation(e)
+    button = $(e.currentTarget)
+    row = button.closest('.credential-row')
+    codeEl = row.find('.credential-value')
+    password = codeEl.data('password')
+    iconEye = button.find('.icon-eye')
+    iconEyeSlash = button.find('.icon-eye-slash')
+
+    if codeEl.text() == '••••••••'
+      codeEl.text(password)
+      iconEye.hide()
+      iconEyeSlash.show()
+    else
+      codeEl.text('••••••••')
+      iconEye.show()
+      iconEyeSlash.hide()
+
+  copyToClipboard: (text) ->
+    # Create temporary textarea
+    textarea = $('<textarea>')
+    textarea.val(text)
+    textarea.css(
+      position: 'fixed'
+      opacity: 0
+    )
+    $('body').append(textarea)
+    textarea[0].select()
+
+    try
+      document.execCommand('copy')
+    catch err
+      console.error('Failed to copy', err)
+
+    textarea.remove()
 
 App.Config.set('login', Login, 'Routes')
 App.Config.set('login/admin/:password_auth_token', Login, 'Routes')
