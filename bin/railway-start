@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+echo "========================================="
+echo "Starting Zammad on Railway"
+echo "========================================="
+
+# Function to check if PostgreSQL is ready
+function check_postgresql_ready {
+  echo 'Checking if PostgreSQL is ready...'
+
+  # Extract database connection info from DATABASE_URL
+  if [ -n "$DATABASE_URL" ]; then
+    PGHOST=$(echo "$DATABASE_URL" | sed -E 's#.*@([^:/]+).*#\1#')
+    PGPORT=$(echo "$DATABASE_URL" | sed -E 's#.*:([0-9]+)/.*#\1#')
+    echo "PostgreSQL server: ${PGHOST}:${PGPORT}"
+  else
+    echo "ERROR: DATABASE_URL not set!"
+    exit 1
+  fi
+
+  until (echo > /dev/tcp/"${PGHOST}"/"${PGPORT}") &> /dev/null; do
+    echo "  waiting for postgresql server to be ready..."
+    sleep 2
+  done
+
+  echo "✓ PostgreSQL is ready!"
+}
+
+# Check PostgreSQL connection
+check_postgresql_ready
+
+# Run database migrations
+echo "========================================="
+echo "Running database setup..."
+echo "========================================="
+
+if ! (bundle exec rails r 'puts User.any?' 2> /dev/null | grep -q true); then
+  echo "First time setup detected!"
+  echo "  - Running migrations..."
+  echo "  - Seeding initial data..."
+  bundle exec rake db:migrate db:seed
+  echo "✓ First time setup complete"
+else
+  echo "Existing database detected"
+  echo "  - Clearing cache..."
+  bundle exec rails r "Rails.cache.clear"
+  echo "  - Running pending migrations..."
+  bundle exec rake db:migrate
+  echo "  - Synchronizing locales and translations..."
+  bundle exec rails r "Locale.sync; Translation.sync"
+  echo "✓ Database update complete"
+fi
+
+# Configure Elasticsearch
+echo "========================================="
+echo "Configuring search..."
+echo "========================================="
+if [ "${ELASTICSEARCH_ENABLED:-false}" == "false" ]; then
+  echo "Elasticsearch is disabled"
+  bundle exec rails r "Setting.set('es_url', '')"
+else
+  echo "Elasticsearch is enabled"
+fi
+
+echo "========================================="
+echo "Starting Zammad Rails server"
+echo "Port: ${PORT:-3000}"
+echo "Bind: ${ZAMMAD_BIND_IP:-0.0.0.0}"
+echo "Environment: ${RAILS_ENV:-production}"
+echo "========================================="
+
+# Start the Rails server
+# Railway provides PORT environment variable
+exec bundle exec puma -b tcp://[::]:"${PORT:-3000}" -e "${RAILS_ENV:-production}"
