@@ -5,7 +5,7 @@ module Zammad
     module Initializer
       module DbPreflightCheck
 
-        MIN_VERSION = '13'.freeze
+        MIN_VERSION = '12'.freeze  # Temporário: alterado de '13' para permitir PostgreSQL 12 em desenvolvimento
 
         class << self
 
