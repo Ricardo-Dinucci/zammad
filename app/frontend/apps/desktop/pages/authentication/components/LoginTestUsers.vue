@@ -23,39 +23,18 @@ const { notify } = useNotifications()
 
 const TEST_USERS: TestUser[] = [
   {
-    name: __('System Administrator'),
-    email: 'admin@example.com',
-    password: 'Admin@123',
+    name: __('Usuário Emissor de Tickets'),
+    email: 'prefeitura@suporte.com',
+    password: 'PrefeituraSuporte123',
+    role: 'CUSTOMER',
+    department: __('Prefeitura'),
+  },
+  {
+    name: __('Usuário do Suporte Técnico'),
+    email: 'suporte@cestas.com',
+    password: 'AdminSuporte123',
     role: 'ADMIN',
-    department: __('Administration Department'),
-  },
-  {
-    name: __('Support Agent'),
-    email: 'agent@example.com',
-    password: 'Agent@123',
-    role: 'AGENT',
-    department: __('Technical Support'),
-  },
-  {
-    name: __('Premium Customer'),
-    email: 'customer@example.com',
-    password: 'Customer@123',
-    role: 'CUSTOMER',
-    department: __('Customers'),
-  },
-  {
-    name: __('Maria Silva'),
-    email: 'maria@example.com',
-    password: 'Maria@123',
-    role: 'AGENT',
-    department: __('Customer Service'),
-  },
-  {
-    name: __('João Santos'),
-    email: 'joao@example.com',
-    password: 'Joao@123',
-    role: 'CUSTOMER',
-    department: __('Customers'),
+    department: __('Suporte Técnico'),
   },
 ]
 
