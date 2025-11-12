@@ -1,66 +1,70 @@
 // Test Users Card Styles for Login Page
 
 .login-with-test-users {
-  max-width: 1400px !important;
-  margin: 0 auto;
+  max-width: 100% !important;
 }
 
 .login-columns-wrapper {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: stretch;
 
   @media (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr;
+    flex-direction: row;
+    align-items: flex-start;
   }
 }
 
 .login-form-column {
+  flex: 1;
   width: 100%;
 }
 
-// Test Users Card
+// Test Users Card - Match hero-unit styling
 .test-users-card {
-  background: white;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
+  flex: 1;
+  width: 100%;
+  background: hsl(0, 0%, 100%);
+  border-radius: 9px;
+  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  margin-bottom: 0;
 }
 
 .test-users-header {
-  background: linear-gradient(to right, #f97316, #eab308);
-  color: white;
-  padding: 1rem 1.5rem;
+  margin: -30px -30px 20px -30px;
+  padding: 15px 30px;
+  border-bottom: 1px solid hsl(0, 0%, 90%);
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s;
+  transition: background 0.2s;
 
   &:hover {
-    background: linear-gradient(to right, #ea580c, #ca8a04);
+    background: hsl(0, 0%, 98%);
   }
 
   .header-content {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
 
     .icon {
-      fill: white;
+      fill: hsl(0, 0%, 40%);
     }
   }
 
   .header-title {
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 500;
+    font-size: 18px;
+    color: hsl(0, 0%, 20%);
   }
 
   .chevron {
     transition: transform 0.3s;
-    fill: white;
+    fill: hsl(0, 0%, 60%);
   }
 }
 
@@ -75,23 +79,24 @@
 }
 
 .test-users-body {
-  padding: 1rem;
-  max-height: 600px;
+  max-height: 500px;
   overflow-y: auto;
 }
 
 // Test User Item
 .test-user-item {
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-  margin-bottom: 0.75rem;
+  border: 1px solid hsl(0, 0%, 90%);
+  border-radius: 6px;
+  padding: 12px 15px;
+  margin-bottom: 12px;
   cursor: pointer;
   transition: all 0.2s;
+  background: white;
 
   &:hover {
-    border-color: #3b82f6;
-    background: #eff6ff;
+    border-color: hsl(200, 70%, 50%);
+    background: hsl(200, 100%, 98%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
     .copy-btn,
     .toggle-password-btn {
@@ -116,38 +121,40 @@
 }
 
 .user-name {
-  font-weight: bold;
-  margin: 0 0 0.25rem 0;
-  font-size: 1rem;
-  color: #111827;
+  font-weight: 500;
+  margin: 0 0 3px 0;
+  font-size: 14px;
+  color: hsl(0, 0%, 15%);
 }
 
 .user-department {
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: 12px;
+  color: hsl(0, 0%, 50%);
   margin: 0;
 }
 
 .user-role-badge {
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 
   &.role-admin {
-    background: #f3e8ff;
-    color: #7c3aed;
+    background: hsl(270, 50%, 95%);
+    color: hsl(270, 50%, 40%);
   }
 
   &.role-agent {
-    background: #dbeafe;
-    color: #2563eb;
+    background: hsl(200, 70%, 95%);
+    color: hsl(200, 70%, 40%);
   }
 
   &.role-customer {
-    background: #d1fae5;
-    color: #059669;
+    background: hsl(150, 50%, 95%);
+    color: hsl(150, 50%, 35%);
   }
 }
 
@@ -165,38 +172,41 @@
 
 .credential-value {
   flex: 1;
-  font-size: 0.75rem;
-  font-family: 'Fira Code', 'Monaco', 'Consolas', 'Courier New', monospace;
-  background: #f9fafb;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  color: #374151;
+  font-size: 13px;
+  font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+  background: hsl(0, 0%, 97%);
+  padding: 5px 10px;
+  border-radius: 3px;
+  color: hsl(0, 0%, 30%);
+  border: 1px solid hsl(0, 0%, 90%);
 }
 
 .copy-btn,
 .toggle-password-btn {
-  padding: 0.25rem;
+  padding: 4px 6px;
   background: transparent;
   border: none;
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s, background 0.2s;
-  border-radius: 0.25rem;
+  border-radius: 3px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 28px;
+  height: 28px;
 
   &:hover {
-    background: #e5e7eb;
+    background: hsl(0, 0%, 92%);
   }
 
   &:focus {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
+    outline: 2px solid hsl(200, 70%, 50%);
+    outline-offset: 1px;
   }
 
   .icon {
-    fill: #6b7280;
+    fill: hsl(0, 0%, 50%);
     width: 16px;
     height: 16px;
   }
@@ -211,32 +221,30 @@
 }
 
 // Mobile adjustments
-@media (max-width: 640px) {
+@media (max-width: 1023px) {
   .login-columns-wrapper {
-    gap: 1rem;
+    gap: 15px;
   }
 
   .test-users-card {
-    border-radius: 1rem;
+    padding: 20px;
   }
 
   .test-users-header {
-    padding: 0.75rem 1rem;
-  }
-
-  .test-users-body {
-    padding: 0.75rem;
+    margin: -20px -20px 15px -20px;
+    padding: 12px 20px;
   }
 
   .test-user-item {
-    padding: 0.5rem;
+    padding: 10px;
   }
 
   .user-name {
-    font-size: 0.875rem;
+    font-size: 13px;
   }
 
   .credential-value {
-    font-size: 0.7rem;
+    font-size: 12px;
+    padding: 4px 8px;
   }
 }
