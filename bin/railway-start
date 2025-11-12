@@ -64,6 +64,20 @@ else
   echo "Elasticsearch is enabled"
 fi
 
+# Configure FQDN and HTTP type from environment variables
+echo "========================================="
+echo "Configuring FQDN and HTTP type..."
+echo "========================================="
+if [ -n "${ZAMMAD_FQDN}" ]; then
+  echo "Setting FQDN to: ${ZAMMAD_FQDN}"
+  bundle exec rails r "Setting.set('fqdn', '${ZAMMAD_FQDN}')"
+fi
+
+if [ -n "${ZAMMAD_HTTP_TYPE}" ]; then
+  echo "Setting HTTP type to: ${ZAMMAD_HTTP_TYPE}"
+  bundle exec rails r "Setting.set('http_type', '${ZAMMAD_HTTP_TYPE}')"
+fi
+
 echo "========================================="
 echo "Starting Zammad Rails server"
 echo "Port: ${PORT:-3000}"
