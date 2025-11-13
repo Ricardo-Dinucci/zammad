@@ -42,9 +42,10 @@ Rails.application.config.to_prepare do
         active: true
       )
 
-      # Update password using the model to trigger Argon2 hashing
+      # Update password - MUST use save! (not save(validate: false))
+      # This triggers before_validation :ensure_password callback which hashes the password
       user.password = user_data[:password]
-      user.save(validate: false)
+      user.save!
 
       Rails.logger.info "  ✓ User updated and ready for login"
     else
