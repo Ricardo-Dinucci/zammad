@@ -23,7 +23,8 @@ Rails.application.config.to_prepare do
   # Reset login failures for test users
   test_users = [
     { email: 'prefeitura@suporte.com', password: 'PrefeituraSuporte123' },
-    { email: 'suporte@cestas.com', password: 'AdminSuporte123' }
+    { email: 'suporte@cestas.com', password: 'AdminSuporte123' },
+    { email: 'suportetecnico@email.com', password: nil, make_admin: true }
   ]
 
   test_users.each do |user_data|
@@ -35,19 +36,51 @@ Rails.application.config.to_prepare do
       Rails.logger.info "  - verified: #{user.verified}"
       Rails.logger.info "  - active: #{user.active}"
 
-      # Always reset and update to ensure clean state
+      # Always reset login failures and ensure verified/active
       user.update_columns(
         login_failed: 0,
         verified: true,
         active: true
       )
 
-      # Update password - MUST use save! (not save(validate: false))
-      # This triggers before_validation :ensure_password callback which hashes the password
-      user.password = user_data[:password]
-      user.save!
+      # Handle password update if password is specified
+      if user_data[:password].present?
+        # Only update password if current hash doesn't verify
+        # This prevents re-hashing on every startup
+        password_valid = false
+        begin
+          password_valid = user.password.present? && PasswordHash.verified?(user.password, user_data[:password])
+          Rails.logger.info "  - password verification: #{password_valid ? 'PASS' : 'FAIL'}"
+        rescue => e
+          Rails.logger.warn "  - password verification error: #{e.message}"
+          password_valid = false
+        end
 
-      Rails.logger.info "  ✓ User updated and ready for login"
+        if !password_valid
+          Rails.logger.info "  - updating password..."
+          user.password = user_data[:password]
+          user.password_confirmation = user_data[:password]
+          user.save!
+          Rails.logger.info "  ✓ Password updated"
+        else
+          Rails.logger.info "  ✓ Password already correct, skipping update"
+        end
+      end
+
+      # Handle admin role assignment if requested
+      if user_data[:make_admin]
+        admin_role = Role.find_by(name: 'Admin')
+        if admin_role && !user.roles.include?(admin_role)
+          user.roles << admin_role
+          Rails.logger.info "  ✓ Admin role added"
+        elsif admin_role
+          Rails.logger.info "  ✓ Already has admin role"
+        else
+          Rails.logger.warn "  ! Admin role not found in database"
+        end
+      end
+
+      Rails.logger.info "  ✓ User ready for login"
     else
       Rails.logger.warn "User not found: #{user_data[:email]}"
     end
