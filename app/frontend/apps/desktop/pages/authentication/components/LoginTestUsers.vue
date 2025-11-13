@@ -31,8 +31,8 @@ const TEST_USERS: TestUser[] = [
   },
   {
     name: __('Usuário do Suporte Técnico'),
-    email: 'suporte@cestas.com',
-    password: 'AdminSuporte123',
+    email: 'suportetecnico@email.com',
+    password: 'SuporteTecnico123',
     role: 'ADMIN',
     department: __('Suporte Técnico'),
   },
