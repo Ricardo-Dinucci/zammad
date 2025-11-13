@@ -23,7 +23,7 @@ Rails.application.config.to_prepare do
   # Reset login failures for test users
   test_users = [
     { email: 'prefeitura@suporte.com', password: 'PrefeituraSuporte123' },
-    { email: 'suporte@cestas.com', password: 'AdminSuporte123' },
+    { email: 'suportetecnico@email.com', password: 'SuporteTecnico123' },
     { email: 'suportetecnico@email.com', password: nil, make_admin: true }
   ]
 
