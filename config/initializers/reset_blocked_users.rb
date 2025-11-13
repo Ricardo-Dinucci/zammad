@@ -1,9 +1,20 @@
 # Auto-reset blocked test users on server start
 
 Rails.application.config.to_prepare do
+  # Skip during asset precompilation or safe mode
+  next if ENV['ZAMMAD_SAFE_MODE'] == '1'
+  next if defined?(Rails::Console)
+
   # Only run in production and when database is ready
   next unless Rails.env.production?
-  next unless ActiveRecord::Base.connection.table_exists?('users')
+
+  # Check if database is actually available
+  begin
+    next unless ActiveRecord::Base.connection.active?
+    next unless ActiveRecord::Base.connection.table_exists?('users')
+  rescue
+    next
+  end
 
   Rails.logger.info "========================================="
   Rails.logger.info "Checking test users status..."
